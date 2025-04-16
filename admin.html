@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - MotoTechGear</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            padding: 20px;
+        }
+
+        #productForm {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin-top: 20px;
+        }
+
+        #productForm input[type="text"],
+        #productForm input[type="number"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        #productForm button[type="submit"] {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        #productForm button[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+
+        .product-list-admin {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .product-item-admin {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-info-admin {
+            flex-grow: 1;
+        }
+
+        .admin-actions button {
+            background: none;
+            border: 1px solid #d9534f;
+            color: #d9534f;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .admin-actions button:hover {
+            background-color: #d9534f;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">MotoTech Admin</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container admin-container">
+        <h2>Add New Product</h2>
+        <form id="productForm">
+            <input type="text" id="name" placeholder="Product Name" required><br>
+            <input type="number" id="price" placeholder="Price" required><br>
+            <input type="text" id="image" placeholder="Image URL" required><br>
+            <input type="text" id="category" placeholder="Category" required><br>
+            <button type="submit">Add Product</button>
+        </form>
+
+        <div class="product-list-admin">
+            <h2>Existing Products</h2>
+            <ul id="existingProducts">
+                </ul>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productForm = document.getElementById('productForm');
+            const existingProductsList = document.getElementById('existingProducts');
+
+            loadProducts();
+
+            productForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const price = parseFloat(document.getElementById('price').value);
+                const image = document.getElementById('image').value;
+                const category = document.getElementById('category').value;
+
+                let products = JSON.parse(localStorage.getItem('products')) || [];
+                products.push({
+                    id: Date.now(),
+                    name,
+                    price,
+                    image,
+                    category,
+                    quantity: 1 // Initialize quantity for cart
+                });
+                localStorage.setItem('products', JSON.stringify(products));
+                alert("Product added successfully!");
+                this.reset();
+                loadProducts(); // Reload the product list after adding
+                updateProductsOnMainPage(products); // Update the products array in script.js if the main page is open
+            });
+
+            function loadProducts() {
+                const products = JSON.parse(localStorage.getItem('products')) || [];
+                existingProductsList.innerHTML = '';
+                if (products.length === 0) {
+                    existingProductsList.innerHTML = '<p>No products added yet.</p>';
+                    return;
+                }
+                products.forEach(product => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('product-item-admin');
+                    listItem.innerHTML = `
+                        <div class="product-info-admin">
+                            <strong>${product.name}</strong> - $${product.price.toFixed(2)} (${product.category})
+                        </div>
+                        <div class="admin-actions">
+                            <button onclick="deleteProduct(${product.id})">Delete</button>
+                        </div>
+                    `;
+                    existingProductsList.appendChild(listItem);
+                });
+            }
+
+            window.deleteProduct = function(productId) {
+                let products = JSON.parse(localStorage.getItem('products')) || [];
+                products = products.filter(product => product.id !== productId);
+                localStorage.setItem('products', JSON.stringify(products));
+                loadProducts();
+                updateProductsOnMainPage(products); // Update the products array in script.js
+            };
+
+            function updateProductsOnMainPage(updatedProducts) {
+                // This is a basic way to try and update the products array in the main page's script.
+                // It relies on the script.js being loaded and having a global 'products' variable.
+                // A more robust solution might involve using events or a more structured data management approach.
+                if (window.updateProductData) {
+                    window.updateProductData(updatedProducts);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

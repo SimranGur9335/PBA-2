@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotoTech Gear</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">MotoTech Gear (Clone)</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="helmet.html">Helmets</a></li>
+                    <li><a href="jackets.html">Jackets</a></li>
+                    <li><a href="gloves.html">Gloves</a></li>
+                    <li><a href="pants.html">Pants</a></li>
+                    <li><a href="boots.html">Boots</a></li>
+                    <li><a href="cart.html">Cart (<span class="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>Category</h3>
+                <label><input type="checkbox" name="category" value="helmet"> Helmets</label><br>
+                <label><input type="checkbox" name="category" value="jacket"> Jackets</label><br>
+                <label><input type="checkbox" name="category" value="glove"> Gloves</label><br>
+                <label><input type="checkbox" name="category" value="pant"> Pants</label><br>
+                <label><input type="checkbox" name="category" value="boot"> Boots</label><br>
+            </div>
+
+            <div class="filter-section">
+                <h3>Price</h3>
+                <label><input type="radio" name="price" value="all" checked> All</label><br>
+                <label><input type="radio" name="price" value="0-100"> $0 - $100</label><br>
+                <label><input type="radio" name="price" value="101-300"> $101 - $300</label><br>
+                <label><input type="radio" name="price" value="301-500"> $301 - $500</label><br>
+                <label><input type="radio" name="price" value="500+"> $500+</label><br>
+            </div>
+
+            <div class="sort-section">
+                <h3>Sort By</h3>
+                <select id="sort-by">
+                    <option value="default">Default</option>
+                    <option value="price-low-to-high">Price: Low to High</option>
+                    <option value="price-high-to-low">Price: High to Low</option>
+                    <option value="name-a-z">Name: A-Z</option>
+                    <option value="name-z-a">Name: Z-A</option>
+                </select>
+            </div>
+        </aside>
+
+        <main class="product-list">
+            </main>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MotoTech Gear (Clone)</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

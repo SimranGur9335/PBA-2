@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Boots - MotoTechGear</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reusing styles */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; }
+        .product-card { background-color: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); padding: 15px; text-align: center; }
+        .product-card img { max-width: 100%; height: auto; margin-bottom: 10px; }
+        .product-card h3 { margin-top: 0; font-size: 1.2em; margin-bottom: 5px; }
+        .product-card .price { color: green; font-weight: bold; margin-bottom: 10px; }
+        .product-card button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1em; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">MotoTechGear</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="helmet.html">Helmets</a></li>
+                    <li><a href="jackets.html">Jackets</a></li>
+                    <li><a href="gloves.html">Gloves</a></li>
+                    <li><a href="pants.html">Pants</a></li>
+                    <li><a href="boots.html">Boots</a></li>
+                    <li><a href="cart.html">Cart (<span class="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2>Boots</h2>
+        <div class="product-grid" id="bootProducts">
+            </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MotoTech Gear (Clone)</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bootProductsContainer = document.getElementById('bootProducts');
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            function renderBoots() {
+                const bootList = products.filter(product => product.category === 'boot');
+                bootProductsContainer.innerHTML = '';
+                if (bootList.length === 0) {
+                    bootProductsContainer.innerHTML = '<p>No boots available.</p>';
+                    return;
+                }
+                bootList.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    productCard.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p class="price">$${product.price.toFixed(2)}</p>
+                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    `;
+                    bootProductsContainer.appendChild(productCard);
+                });
+
+                const addToCartButtons = bootProductsContainer.querySelectorAll('.add-to-cart');
+                addToCartButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.dataset.id);
+                        addToCart(productId);
+                    });
+                });
+                updateCartCount();
+            }
+
+            function addToCart(productId) {
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    const productToAdd = products.find(product => product.id === productId);
+                    if (productToAdd) {
+                        cart.push({ ...productToAdd, quantity: 1 });
+                    }
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+            }
+
+            function updateCartCount() {
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                cartCountElements.forEach(el => el.textContent = totalQuantity);
+            }
+
+            renderBoots();
+        });
+    </script>
+</body>
+</html>
